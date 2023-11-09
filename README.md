@@ -1,73 +1,52 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+# Introduction
+This service was created because it was inconvenient for a group of people to use one phone for a long time to place a group order at Subway.
+I don't have any permission from Subway, so if they say anything, I might have to stop the service immediately.
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+# Plans(feature)
 
-## Description
+## 1. User System
+- User can sign in/sign up
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+## 2. Food System
+- Subway has several menus...
+- Each of menu has a category.
+- Menu are made of some ingredients
+- In some menu(sandwich) some ingredients are optional
+- In some menu(sandwich) some ingredients are additionally selectable
+### Key Features
+- All of category, food and ingredients are editable by admin user
 
-## Installation
+## 3. Permit System
+- admin user has permits to edit foods
 
-```bash
-$ npm install
-```
+## 4. Order System
+### Key Features
+- User can select menu and ingredients
+- Selected menu can be saved and deleted
 
-## Running the app
+## 5. Room System
+ - Any user can create their own room, to become a room owner
+ - A user can belong to several room
+### Key Features
+ - Each Of Room has unique key
+ - Users should join other room by the unique key
+ - Room owner can kick other users
 
-```bash
-# development
-$ npm run start
+## 6. Group Order System
+### Key Features
+ - Users can share selected menu of them in a room seperately
+ - Users can share the selected menu in the room
+ - Room owners can clear the every menus selected by users
+ - Room owners can freeze users' menu selections so that they can no longer add, delete, or edit them
 
-# watch mode
-$ npm run start:dev
+## 7. Convenient System
+### Key Features
+ - (Not sure how) Make easy to read format of selected menus in a room for workers in subway
 
-# production mode
-$ npm run start:prod
-```
-
-## Test
-
-```bash
-# unit tests
-$ npm run test
-
-# e2e tests
-$ npm run test:e2e
-
-# test coverage
-$ npm run test:cov
-```
-
-## Support
-
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
-
-## Stay in touch
-
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
-
-## License
-
-Nest is [MIT licensed](LICENSE).
+## 8. Additional Feature
+- people in a room can chat
+- users can request to add menu or ingredients
+- room owner control selectable menus
+- users not activated for a long time removed automatically
+- rooms not activated for a long time removed automatically
