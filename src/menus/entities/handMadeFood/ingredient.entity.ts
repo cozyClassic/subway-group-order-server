@@ -1,11 +1,8 @@
-import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
+import { SoftDeleteEntity } from 'src/common/softDeleteInterface.entity';
+import { Column, ManyToOne } from 'typeorm';
 import { IngredientType } from './ingredientType.entity';
 
-@Entity()
-export class Ingredient {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class Ingredient extends SoftDeleteEntity {
   @Column()
   name: string;
 

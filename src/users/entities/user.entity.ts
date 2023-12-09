@@ -1,10 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
+import { SoftDeleteEntity } from 'src/common/softDeleteInterface.entity';
+import { Column } from 'typeorm';
 
-@Entity()
-export class User {
-  @PrimaryGeneratedColumn()
-  id: number;
-
+export class User extends SoftDeleteEntity {
   @Column()
   username: string;
 
