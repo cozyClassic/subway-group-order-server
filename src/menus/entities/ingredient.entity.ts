@@ -7,10 +7,7 @@ class Ingredient extends SoftDeleteEntity {
   @Column()
   name: string;
 
-  @Column({ type: 'float' })
-  price: number;
-
-  @Column()
+  @Column({ nullable: true })
   photo: string;
 
   @ManyToOne(
@@ -18,6 +15,14 @@ class Ingredient extends SoftDeleteEntity {
     (ingredientType) => ingredientType.ingredients,
   )
   type: IngredientType;
+
+  static from({ name, photo, type }) {
+    const ingredient = new Ingredient();
+    ingredient.name = name;
+    ingredient.photo = photo || null;
+    ingredient.type = type;
+    return ingredient;
+  }
 }
 
 export { Ingredient };

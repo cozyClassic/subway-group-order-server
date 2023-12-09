@@ -8,11 +8,15 @@ import {
   Delete,
 } from '@nestjs/common';
 import { MenusService } from './menus.service';
-import { IngredientTypeService } from './menus.service';
 import { CreateMenuDto } from './dto/menu-create.dto';
 import { UpdateMenuDto } from './dto/menu-update.dto';
-import { IngredentTypeCreateDto } from './dto/ingredient-type-create.dto';
-import { IngredentTypeUpdateDto } from './dto/ingredient-type-update.dto';
+
+import { IngredientTypeService } from './menus.service';
+import { IngredentTypeCreateDto } from './dto/ingredientType-create.dto';
+import { IngredentTypeUpdateDto } from './dto/ingredientType-update.dto';
+
+import { IngredientService } from './menus.service';
+import { IngredentCreateDto } from './dto/ingredient-create.dto';
 
 @Controller('menus')
 class MenusController {
@@ -71,4 +75,37 @@ class IngredientTypeController {
   }
 }
 
-export { MenusController, IngredientTypeController };
+@Controller('ingredient')
+class IngredientController {
+  constructor(private readonly ingredientService: IngredientService) {}
+
+  @Post()
+  async create(@Body() ingredientDto: IngredentCreateDto) {
+    return this.ingredientService.create(ingredientDto);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() ingredientDto: IngredentCreateDto,
+  ) {
+    return this.ingredientService.update(+id, ingredientDto);
+  }
+
+  @Get()
+  async findAll() {
+    return this.ingredientService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.ingredientService.findOne(+id);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.ingredientService.remove(+id);
+  }
+}
+
+export { MenusController, IngredientTypeController, IngredientController };

@@ -9,8 +9,11 @@ import { CreateMenuDto } from './dto/menu-create.dto';
 import { UpdateMenuDto } from './dto/menu-update.dto';
 
 import { IngredientType } from './entities/ingredientType.entity';
-import { IngredentTypeCreateDto } from './dto/ingredient-type-create.dto';
-import { IngredentTypeUpdateDto } from './dto/ingredient-type-update.dto';
+import { IngredentTypeCreateDto } from './dto/ingredientType-create.dto';
+import { IngredentTypeUpdateDto } from './dto/ingredientType-update.dto';
+
+import { Ingredient } from './entities/ingredient.entity';
+import { IngredentCreateDto } from './dto/ingredient-create.dto';
 
 @Injectable()
 class MenusService {
@@ -93,4 +96,56 @@ class IngredientTypeService {
   }
 }
 
-export { MenusService, IngredientTypeService };
+@Injectable()
+class IngredientService {
+  constructor(
+    @InjectRepository(Ingredient)
+    private ingredientRepo: Repository<Ingredient>,
+  ) {}
+  async create(ingredientDto: IngredentCreateDto) {
+    const ingredient: Ingredient = ingredientDto.toIngredientEntity();
+
+    const result: Ingredient = await this.ingredientRepo.save(ingredient);
+    return result;
+  }
+
+  async findAll() {
+    const ingredients: Ingredient[] = await this.ingredientRepo.find();
+    return ingredients;
+  }
+
+  async findOne(id: number) {
+    if (!id) return null;
+    const ingredient: Ingredient = await this.ingredientRepo.findOne({
+      where: { id },
+    });
+    return ingredient;
+  }
+
+  async update(id: number, ingredientDto: IngredentCreateDto) {
+    if (!id) {
+      throw new NotAcceptableException('not valid id');
+    }
+    const ingredient: Ingredient = await this.ingredientRepo.findOne({
+      where: { id },
+    });
+    Object.assign(ingredient, ingredientDto);
+    const result: Ingredient = await this.ingredientRepo.save(ingredient);
+    return result;
+  }
+
+  async remove(id: number) {
+    const ingredient: Ingredient = await this.ingredientRepo.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!ingredient) {
+      throw new NotFoundException('ingredient is not found');
+    }
+    const result = await this.ingredientRepo.softDelete(ingredient);
+    return result;
+  }
+}
+
+export { MenusService, IngredientTypeService, IngredientService };
