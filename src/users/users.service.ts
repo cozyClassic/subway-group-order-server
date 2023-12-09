@@ -28,4 +28,8 @@ export class UsersService {
     });
     return this.usersRepo.remove(user);
   }
+
+  async findAll() {
+    return await this.usersRepo.find();
+  }
 }
