@@ -16,10 +16,11 @@ class Ingredient extends SoftDeleteEntity {
   )
   type: IngredientType;
 
-  static from({ name, photo }) {
+  static from({ name, photo, type }) {
     const ingredient = new Ingredient();
     ingredient.name = name;
     ingredient.photo = photo || null;
+    ingredient.type = type;
     return ingredient;
   }
 }
