@@ -1,12 +1,5 @@
-import {
-  Entity,
-  Column,
-  PrimaryGeneratedColumn,
-  ManyToOne,
-  ManyToMany,
-} from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, ManyToOne } from 'typeorm';
 import { IngredientType } from './ingredientType.entity';
-import { Menu } from './menu.entity';
 
 @Entity()
 export class Ingredient {
@@ -16,12 +9,15 @@ export class Ingredient {
   @Column()
   name: string;
 
+  @Column({ type: 'float' })
+  price: number;
+
+  @Column()
+  photo: string;
+
   @ManyToOne(
     () => IngredientType,
     (ingredientType) => ingredientType.ingredients,
   )
   type: IngredientType;
-
-  @ManyToMany(() => Menu, (menu) => menu.ingredients)
-  menus: Menu[];
 }

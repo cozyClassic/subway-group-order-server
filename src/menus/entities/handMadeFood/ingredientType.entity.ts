@@ -10,9 +10,8 @@ export class IngredientType {
   @Column()
   name: string;
 
-  @Column()
-  isFeeOption: boolean;
-
   @OneToMany(() => Ingredient, (ingredient) => ingredient.type)
   ingredients: Ingredient[];
+
+  // isCustomerSelectable - 재료와 음식 사이에 옵션
 }
