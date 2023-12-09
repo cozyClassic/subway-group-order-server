@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateMenuDto } from './dto/create-menu.dto';
-import { UpdateMenuDto } from './dto/update-menu.dto';
+import { CreateMenuDto } from './dto/menu-create.dto';
+import { UpdateMenuDto } from './dto/menu-update.dto';
 
 @Injectable()
 export class MenusService {
