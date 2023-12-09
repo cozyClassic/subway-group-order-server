@@ -8,7 +8,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { CreateMenuDto } from './dto/menu-create.dto';
 import { UpdateMenuDto } from './dto/menu-update.dto';
 
-import { IngredientType } from './entities/handMadeFood/ingredientType.entity';
+import { IngredientType } from './entities/ingredientType.entity';
 import { IngredentTypeCreateDto } from './dto/ingredient-type-create.dto';
 import { IngredentTypeUpdateDto } from './dto/ingredient-type-update.dto';
 

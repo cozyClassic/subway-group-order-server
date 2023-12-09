@@ -4,8 +4,6 @@ import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { UsersModule } from './users/users.module';
 import { MenusModule } from './menus/menus.module';
-import { User } from './users/entities/user.entity';
-import { IngredientType } from './menus/entities/handMadeFood/ingredientType.entity';
 
 @Module({
   imports: [
@@ -13,7 +11,7 @@ import { IngredientType } from './menus/entities/handMadeFood/ingredientType.ent
       type: 'sqlite', // postgresql
       database: 'db.sqlite',
       autoLoadEntities: true,
-      entities: [User, IngredientType],
+      entities: [__dirname + '/**/*.entity{.ts,.js}'],
       synchronize: true,
     }),
     UsersModule,

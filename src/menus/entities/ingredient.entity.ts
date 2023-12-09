@@ -1,8 +1,9 @@
 import { SoftDeleteEntity } from 'src/common/softDeleteInterface.entity';
-import { Column, ManyToOne } from 'typeorm';
+import { Entity, Column, ManyToOne } from 'typeorm';
 import { IngredientType } from './ingredientType.entity';
 
-export class Ingredient extends SoftDeleteEntity {
+@Entity()
+class Ingredient extends SoftDeleteEntity {
   @Column()
   name: string;
 
@@ -18,3 +19,5 @@ export class Ingredient extends SoftDeleteEntity {
   )
   type: IngredientType;
 }
+
+export { Ingredient };
