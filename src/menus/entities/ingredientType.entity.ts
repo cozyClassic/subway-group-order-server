@@ -1,6 +1,7 @@
 import { SoftDeleteEntity } from 'src/common/softDeleteInterface.entity';
-import { Entity, Column, OneToMany } from 'typeorm';
+import { Entity, Column, OneToMany, ManyToOne } from 'typeorm';
 import { Ingredient } from './ingredient.entity';
+import { FoodsHandMadeIngredientType } from './foodsHandMadeIngredientType.entity';
 
 @Entity()
 class IngredientType extends SoftDeleteEntity {
@@ -11,6 +12,13 @@ class IngredientType extends SoftDeleteEntity {
 
   @OneToMany(() => Ingredient, (ingredient) => ingredient.type)
   ingredients: Ingredient[];
+
+  @ManyToOne(
+    () => FoodsHandMadeIngredientType,
+    (foodsHandMadeIngredientTypes) =>
+      foodsHandMadeIngredientTypes.ingredientType,
+  )
+  foodsHandMadeIngredientTypes: FoodsHandMadeIngredientType[];
 
   static from({ name }) {
     const ingredientType = new IngredientType();
