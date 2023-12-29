@@ -1,4 +1,5 @@
 import { IsString, IsOptional } from 'class-validator';
+import { FoodsHandMadeIngredientTypeCreateDto } from './foodsHandmadeIngredientType-create.dto';
 
 export class FoodsHandMadeCreateDto {
   @IsString()
@@ -7,4 +8,7 @@ export class FoodsHandMadeCreateDto {
   @IsOptional()
   @IsString()
   photo: string;
+
+  @IsOptional()
+  ingredientTypes: FoodsHandMadeIngredientTypeCreateDto;
 }

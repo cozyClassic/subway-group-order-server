@@ -21,6 +21,9 @@ import { FoodsHandMade } from './entities/foodsHandMade.entity';
 import { FoodsHandMadeCreateDto } from './dto/foodsHandMade-create.dto';
 import { FoodsHandMadeUpdateDto } from './dto/foodsHandMade-update.dto';
 
+import { FoodsHandMadeIngredientType } from './entities/foodsHandMadeIngredientType.entity';
+import { FoodsHandMadeIngredientTypeCreateDto } from './dto/foodsHandMadeIngredientType-create.dto';
+
 @Injectable()
 class MenusService {
   create(createMenuDto: CreateMenuDto) {
@@ -155,15 +158,78 @@ class IngredientService {
 }
 
 @Injectable()
+class MerchandiseService {
+  constructor(
+    @InjectRepository(Merchandise)
+    private merchandiseRepo: Repository<Merchandise>,
+  ) {}
+
+  async create(dbType: string) {
+    const merchandise: Merchandise = new Merchandise();
+    merchandise.dbType = dbType;
+    const result: Merchandise = await this.merchandiseRepo.save(merchandise);
+    return result;
+  }
+
+  async remove(id: number) {
+    const merchandise: Merchandise = await this.merchandiseRepo.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!merchandise) {
+      throw new NotFoundException('merchandise is not found');
+    }
+    const result = await this.merchandiseRepo.softDelete(merchandise.id);
+    return result;
+  }
+}
+
+@Injectable()
+class FoodsHandMadeIngredientTypeService {
+  constructor(
+    @InjectRepository(FoodsHandMadeIngredientType)
+    private foodsHandMadeIngredientTypeRepo: Repository<FoodsHandMadeIngredientType>,
+  ) {}
+
+  async create({
+    foodsHandMade,
+    foodsHandMadeIngredientTypeDto,
+  }: {
+    foodsHandMade: FoodsHandMade;
+    foodsHandMadeIngredientTypeDto: FoodsHandMadeIngredientTypeCreateDto;
+  }) {
+    try {
+      const foodsHandMadeIngredientType: FoodsHandMadeIngredientType =
+        new FoodsHandMadeIngredientType();
+      foodsHandMadeIngredientType.foodsHandMade = foodsHandMade;
+      foodsHandMadeIngredientType.isRequired =
+        foodsHandMadeIngredientTypeDto.isRequired;
+      foodsHandMadeIngredientType.isMultiple =
+        foodsHandMadeIngredientTypeDto.isMultiple;
+      foodsHandMadeIngredientType.defaultIngredientId =
+        foodsHandMadeIngredientTypeDto.defaultIngredientId;
+      foodsHandMadeIngredientType.selectableIngredientIds =
+        foodsHandMadeIngredientTypeDto.selectableIngredientIds;
+      const result: FoodsHandMadeIngredientType =
+        await this.foodsHandMadeIngredientTypeRepo.save(
+          foodsHandMadeIngredientType,
+        );
+      return result;
+    } catch (err) {
+      console.log(err);
+    }
+  }
+}
+
+@Injectable()
 class FoodsHandMadeService {
   constructor(
     @InjectRepository(FoodsHandMade)
     private foodsHandMadeRepo: Repository<FoodsHandMade>,
-
-    @InjectRepository(Merchandise)
-    private merchandiseRepo: Repository<Merchandise>,
-
     private dataSource: DataSource,
+    private merchandiseService: MerchandiseService,
+    private foodsHandMadeIngredientTypeService: FoodsHandMadeIngredientTypeService,
   ) {}
 
   async create(foodsHandMadeDto: FoodsHandMadeCreateDto) {
@@ -174,17 +240,21 @@ class FoodsHandMadeService {
     let result;
 
     try {
-      const dbType: string = 'foodsHandMade';
-      const merchandise: Merchandise = new Merchandise();
-      merchandise.dbType = dbType;
-      const merchandiseResult: Merchandise =
-        await queryRunner.manager.save(merchandise);
+      // create merchandise
+      const dbType: string = Merchandise.getDbTypes.foodsHandMade;
+      const merchandiseResult = await this.merchandiseService.create(dbType);
 
       const foodsHandMade: FoodsHandMade = new FoodsHandMade();
       foodsHandMade.id = merchandiseResult.id;
       foodsHandMade.name = foodsHandMadeDto.name;
       foodsHandMade.photo = foodsHandMadeDto.photo;
       result = await queryRunner.manager.save(foodsHandMade);
+      if (foodsHandMadeDto.ingredientTypes) {
+        await this.foodsHandMadeIngredientTypeService.create({
+          foodsHandMade,
+          foodsHandMadeIngredientTypeDto: foodsHandMadeDto.ingredientTypes,
+        });
+      }
       await queryRunner.commitTransaction();
     } catch (err) {
       await queryRunner.rollbackTransaction();
@@ -230,7 +300,8 @@ class FoodsHandMadeService {
     if (!foodsHandMade) {
       throw new NotFoundException('foodsHandMade is not found');
     }
-    const result = await this.foodsHandMadeRepo.softDelete(foodsHandMade.id);
+    await this.merchandiseService.remove(id);
+    const result = await this.foodsHandMadeRepo.softDelete(id);
     return result;
   }
 }

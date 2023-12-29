@@ -14,7 +14,7 @@ export class FoodsHandMadeIngredientType {
 
   // 선택가능한 재료 목록
   @Column()
-  optionalIngredientIds: number[];
+  selectableIngredientIds: number[];
 
   // 한번에 여러개 선택 가능 여부
   @Column()
