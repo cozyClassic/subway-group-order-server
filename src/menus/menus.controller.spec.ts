@@ -3,7 +3,8 @@ import { MenusController } from './menus.controller';
 import { MenusService } from './menus.service';
 
 describe('MenusController', () => {
-  let controller: MenusController;
+  let menuController: MenusController;
+  let menuService: MenusService;
 
   beforeEach(async () => {
     const module: TestingModule = await Test.createTestingModule({
@@ -11,10 +12,11 @@ describe('MenusController', () => {
       providers: [MenusService],
     }).compile();
 
-    controller = module.get<MenusController>(MenusController);
+    menuController = module.get<MenusController>(MenusController);
+    menuService = module.get<MenusService>(MenusService);
   });
 
   it('should be defined', () => {
-    expect(controller).toBeDefined();
+    expect(menuController).toBeDefined();
   });
 });
