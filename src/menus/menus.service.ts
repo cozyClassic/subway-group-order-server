@@ -3,7 +3,7 @@ import {
   NotAcceptableException,
   NotFoundException,
 } from '@nestjs/common';
-import { Repository } from 'typeorm';
+import { Repository, DataSource } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { CreateMenuDto } from './dto/menu-create.dto';
 import { UpdateMenuDto } from './dto/menu-update.dto';
@@ -14,6 +14,12 @@ import { IngredentTypeUpdateDto } from './dto/ingredientType-update.dto';
 
 import { Ingredient } from './entities/ingredient.entity';
 import { IngredentCreateDto } from './dto/ingredient-create.dto';
+
+import { Merchandise } from './entities/merchandise.entity';
+
+import { FoodsHandMade } from './entities/foodsHandMade.entity';
+import { FoodsHandMadeCreateDto } from './dto/foodsHandMade-create.dto';
+import { FoodsHandMadeUpdateDto } from './dto/foodsHandMade-update.dto';
 
 @Injectable()
 class MenusService {
@@ -91,7 +97,7 @@ class IngredientTypeService {
     if (!ingredientType) {
       throw new NotFoundException('ingredient type is not found');
     }
-    const result = await this.ingredientTypeRepo.softDelete(ingredientType);
+    const result = await this.ingredientTypeRepo.softDelete(ingredientType.id);
     return result;
   }
 }
@@ -143,9 +149,95 @@ class IngredientService {
     if (!ingredient) {
       throw new NotFoundException('ingredient is not found');
     }
-    const result = await this.ingredientRepo.softDelete(ingredient);
+    const result = await this.ingredientRepo.softDelete(ingredient.id);
     return result;
   }
 }
 
-export { MenusService, IngredientTypeService, IngredientService };
+@Injectable()
+class FoodsHandMadeService {
+  constructor(
+    @InjectRepository(FoodsHandMade)
+    private foodsHandMadeRepo: Repository<FoodsHandMade>,
+
+    @InjectRepository(Merchandise)
+    private merchandiseRepo: Repository<Merchandise>,
+
+    private dataSource: DataSource,
+  ) {}
+
+  async create(foodsHandMadeDto: FoodsHandMadeCreateDto) {
+    // I want to make tranasction
+    const queryRunner = this.dataSource.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
+    let result;
+
+    try {
+      const dbType: string = 'foodsHandMade';
+      const merchandise: Merchandise = new Merchandise();
+      merchandise.dbType = dbType;
+      const merchandiseResult: Merchandise =
+        await queryRunner.manager.save(merchandise);
+
+      const foodsHandMade: FoodsHandMade = new FoodsHandMade();
+      foodsHandMade.id = merchandiseResult.id;
+      foodsHandMade.name = foodsHandMadeDto.name;
+      foodsHandMade.photo = foodsHandMadeDto.photo;
+      result = await queryRunner.manager.save(foodsHandMade);
+      await queryRunner.commitTransaction();
+    } catch (err) {
+      await queryRunner.rollbackTransaction();
+    } finally {
+      await queryRunner.release();
+    }
+
+    return result;
+  }
+
+  async findAll() {
+    const foodsHandMades: FoodsHandMade[] = await this.foodsHandMadeRepo.find();
+    return foodsHandMades;
+  }
+
+  async findOne(id: number) {
+    if (!id) return null;
+    const foodsHandMade: FoodsHandMade = await this.foodsHandMadeRepo.findOne({
+      where: { id },
+    });
+    return foodsHandMade;
+  }
+
+  async update(id: number, foodsHandMadeDto: FoodsHandMadeUpdateDto) {
+    if (!id) {
+      throw new NotAcceptableException('not valid id');
+    }
+    const foodsHandMade: FoodsHandMade = await this.foodsHandMadeRepo.findOne({
+      where: { id },
+    });
+    Object.assign(foodsHandMade, foodsHandMadeDto);
+    const result: FoodsHandMade =
+      await this.foodsHandMadeRepo.save(foodsHandMade);
+    return result;
+  }
+
+  async remove(id: number) {
+    const foodsHandMade: FoodsHandMade = await this.foodsHandMadeRepo.findOne({
+      where: {
+        id,
+      },
+    });
+    if (!foodsHandMade) {
+      throw new NotFoundException('foodsHandMade is not found');
+    }
+    const result = await this.foodsHandMadeRepo.softDelete(foodsHandMade.id);
+    return result;
+  }
+}
+
+export {
+  MenusService,
+  IngredientTypeService,
+  IngredientService,
+  FoodsHandMadeService,
+};

@@ -18,6 +18,9 @@ import { IngredentTypeUpdateDto } from './dto/ingredientType-update.dto';
 import { IngredientService } from './menus.service';
 import { IngredentCreateDto } from './dto/ingredient-create.dto';
 
+import { FoodsHandMadeService } from './menus.service';
+import { FoodsHandMadeCreateDto } from './dto/foodsHandMade-create.dto';
+
 @Controller('menus')
 class MenusController {
   constructor(private readonly menusService: MenusService) {}
@@ -48,7 +51,7 @@ class MenusController {
   }
 }
 
-@Controller('ingredientType')
+@Controller('v1/ingredientType')
 class IngredientTypeController {
   constructor(private readonly ingredientTypeService: IngredientTypeService) {}
   @Post()
@@ -75,7 +78,7 @@ class IngredientTypeController {
   }
 }
 
-@Controller('ingredient')
+@Controller('v1/ingredient')
 class IngredientController {
   constructor(private readonly ingredientService: IngredientService) {}
 
@@ -108,4 +111,42 @@ class IngredientController {
   }
 }
 
-export { MenusController, IngredientTypeController, IngredientController };
+@Controller('v1/foodsHandMade')
+class FoodsHandMadeController {
+  constructor(private readonly foodsHandMadeService: FoodsHandMadeService) {}
+
+  @Post()
+  async create(@Body() foodsHandMadeDto: FoodsHandMadeCreateDto) {
+    return this.foodsHandMadeService.create(foodsHandMadeDto);
+  }
+
+  @Get()
+  async findAll() {
+    return this.foodsHandMadeService.findAll();
+  }
+
+  @Get(':id')
+  async findOne(@Param('id') id: string) {
+    return this.foodsHandMadeService.findOne(+id);
+  }
+
+  @Patch(':id')
+  async update(
+    @Param('id') id: string,
+    @Body() foodsHandMadeDto: FoodsHandMadeCreateDto,
+  ) {
+    return this.foodsHandMadeService.update(+id, foodsHandMadeDto);
+  }
+
+  @Delete(':id')
+  async remove(@Param('id') id: string) {
+    return this.foodsHandMadeService.remove(+id);
+  }
+}
+
+export {
+  MenusController,
+  IngredientTypeController,
+  IngredientController,
+  FoodsHandMadeController,
+};
